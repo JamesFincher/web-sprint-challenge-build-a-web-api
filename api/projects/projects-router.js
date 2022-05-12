@@ -1,6 +1,10 @@
 const express = require("express");
 const projects = require("./projects-model");
-const { projectsLogger, validateId } = require("./projects-middleware");
+const {
+  projectsLogger,
+  validateId,
+  postValidate,
+} = require("./projects-middleware");
 
 const projectsRouter = express.Router();
 
@@ -23,10 +27,13 @@ projectsRouter.get("/:id", validateId, (req, res) => {
   }
 });
 
-projectsRouter.post("/", (req, res) => {
+projectsRouter.post("/", postValidate, (req, res) => {
+  project = req.body;
   console.log("post / pinged");
   console.log(req.body);
-  res.end();
+  projects.insert(project).then((project) => {
+    res.status(201).json(project);
+  });
 });
 
 projectsRouter.put("/:id", (req, res) => {

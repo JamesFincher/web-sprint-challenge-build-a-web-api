@@ -19,7 +19,17 @@ function validateId(req, res, next) {
   });
 }
 
+function postValidate(req, res, next) {
+  const { description, completed, name } = req.body;
+  if (description && completed && name) {
+    next();
+  } else {
+    res.status(400).json({ message: "Missing required fields" });
+  }
+}
+
 module.exports = {
   projectsLogger,
   validateId,
+  postValidate,
 };
