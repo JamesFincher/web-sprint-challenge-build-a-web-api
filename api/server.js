@@ -3,14 +3,21 @@ const server = express();
 const projectsRouter = require("./projects/projects-router");
 const actionsRouter = require("./actions/actions-router");
 const logger = require("./actions/actions-middlware");
-const projectsLogger = require("./projects/projects-middleware");
+const {
+  projectsLogger,
+  validateId,
+} = require("./projects/projects-middleware");
 server.use(express.json());
-
+server.use(validateId);
 server.use("/api/projects", projectsLogger, projectsRouter);
 server.use("/api/actions", logger, actionsRouter);
 
 server.get("/", (req, res) => {
   res.send("Hello World");
+});
+
+server.use("*", (req, res) => {
+  res.status(404).json({ message: "Are you lost? Resource not found!" });
 });
 
 // Configure your server here

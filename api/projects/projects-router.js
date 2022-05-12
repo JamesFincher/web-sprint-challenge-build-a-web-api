@@ -1,17 +1,26 @@
 const express = require("express");
 const projects = require("./projects-model");
-const middleware = require("./projects-middleware");
+const { projectsLogger, validateId } = require("./projects-middleware");
 
 const projectsRouter = express.Router();
 
 projectsRouter.get("/", (req, res) => {
   console.log("get / pinged");
-  res.end();
+  projects.get().then((projects) => {
+    res.status(200).json(projects);
+  });
 });
 
-projectsRouter.get("/:id", (req, res) => {
-  console.log("get /:id pinged");
-  res.end();
+projectsRouter.get("/:id", validateId, (req, res) => {
+  console.log("get /:id ping");
+
+  if (!req.params.id) {
+    res.status(404).json({ message: "Project ID not valid" });
+  } else {
+    projects.get(req.params.id).then((project) => {
+      res.status(200).json(project);
+    });
+  }
 });
 
 projectsRouter.post("/", (req, res) => {
