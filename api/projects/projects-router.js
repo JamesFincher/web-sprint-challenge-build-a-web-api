@@ -53,9 +53,11 @@ projectsRouter.put(
   }
 );
 
-projectsRouter.delete("/:id", (req, res) => {
+projectsRouter.delete("/:id", validateId, (req, res) => {
   console.log("delete /:id pinged");
-  res.end();
+  projects.remove(req.params.id).then((project) => {
+    res.status(200).json(project);
+  });
 });
 
 projectsRouter.get("/:id/actions", (req, res) => {
