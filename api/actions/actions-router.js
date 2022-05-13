@@ -1,6 +1,11 @@
 const express = require("express");
 const actions = require("./actions-model");
-const { logger, validateActionId } = require("./actions-middlware");
+const {
+  logger,
+  validateActionUpdate,
+  validateActionId,
+  validateActionInput,
+} = require("./actions-middlware");
 const { router } = require("../server");
 
 const actionRouter = express.Router();
@@ -15,14 +20,20 @@ actionRouter.get("/:id", validateActionId, (req, res) => {
     res.status(200).json(action);
   });
 });
-actionRouter.get("/", (req, res) => {
-  res.end;
+actionRouter.post("/", validateActionInput, (req, res) => {
+  actions.insert(req.body).then((action) => {
+    res.status(201).json(action);
+  });
 });
-actionRouter.get("/", (req, res) => {
-  res.end;
+actionRouter.put("/:id", validateActionUpdate, (req, res) => {
+  actions.update(req.params.id, req.body).then((action) => {
+    res.status(200).json(action);
+  });
 });
-actionRouter.get("/", (req, res) => {
-  res.end;
+actionRouter.delete("/:id", validateActionId, (req, res) => {
+  actions.remove(req.params.id).then((action) => {
+    res.status(200).json(action);
+  });
 });
 
 module.exports = actionRouter;

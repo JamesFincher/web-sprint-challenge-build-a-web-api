@@ -17,4 +17,32 @@ function validateActionId(req, res, next) {
     }
   });
 }
-module.exports = { logger, validateActionId };
+
+function validateActionInput(req, res, next) {
+  const { description, notes, project_id } = req.body;
+  if (!description || !notes || !project_id) {
+    res.status(400).json({
+      message:
+        "Description, Notes, and Project_Id are all required for posts :)",
+    });
+  } else {
+    next();
+  }
+}
+
+function validateActionUpdate(req, res, next) {
+  const { completed } = req.body;
+  if (completed === undefined) {
+    res
+      .status(400)
+      .json({ message: "Completed status is required for updates" });
+  } else {
+    next();
+  }
+}
+module.exports = {
+  logger,
+  validateActionId,
+  validateActionInput,
+  validateActionUpdate,
+};
