@@ -2,7 +2,7 @@ const express = require("express");
 const server = express();
 const projectsRouter = require("./projects/projects-router");
 const actionsRouter = require("./actions/actions-router");
-const logger = require("./actions/actions-middlware");
+const { logger, validateActionId } = require("./actions/actions-middlware");
 const {
   projectsLogger,
   validateId,
