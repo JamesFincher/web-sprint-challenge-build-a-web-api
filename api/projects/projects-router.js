@@ -60,9 +60,9 @@ projectsRouter.delete("/:id", validateId, (req, res) => {
   });
 });
 
-projectsRouter.get("/:id/actions", (req, res) => {
-  console.log("get /:id/actions pinged");
-  res.end();
+projectsRouter.get("/:id/actions", validateId, (req, res) => {
+  const projectId = req.params.id;
+  projects.getProjectActions(projectId).then((actions) => res.json(actions));
 });
 
 module.exports = projectsRouter;
