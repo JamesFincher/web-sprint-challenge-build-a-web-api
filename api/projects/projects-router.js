@@ -2,6 +2,7 @@ const express = require("express");
 const projects = require("./projects-model");
 const {
   projectsLogger,
+  putValidate,
   validateId,
   postValidate,
 } = require("./projects-middleware");
@@ -36,11 +37,21 @@ projectsRouter.post("/", postValidate, (req, res) => {
   });
 });
 
-projectsRouter.put("/:id", (req, res) => {
-  console.log("put /:id pinged");
-  console.log(req.body);
-  res.end();
-});
+projectsRouter.put(
+  "/:id",
+  validateId,
+  putValidate,
+  postValidate,
+  (req, res) => {
+    console.log("put /:id pinged");
+    console.log(req.body);
+    const changes = req.body;
+    console.log(changes);
+    projects.update(req.params.id, changes).then((project) => {
+      res.status(200).json(changes);
+    });
+  }
+);
 
 projectsRouter.delete("/:id", (req, res) => {
   console.log("delete /:id pinged");

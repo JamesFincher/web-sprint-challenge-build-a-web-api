@@ -20,16 +20,25 @@ function validateId(req, res, next) {
 }
 
 function postValidate(req, res, next) {
-  const { description, completed, name } = req.body;
-  if (description && completed && name) {
+  const { description, name } = req.body;
+  if (description && name) {
     next();
   } else {
     res.status(400).json({ message: "Missing required fields" });
   }
 }
 
+function putValidate(req, res, next) {
+  const { completed } = req.body;
+  if (completed === undefined) {
+    res.status(400).json({ message: "Completed status is required!" });
+  } else {
+    next();
+  }
+}
 module.exports = {
   projectsLogger,
   validateId,
   postValidate,
+  putValidate,
 };
